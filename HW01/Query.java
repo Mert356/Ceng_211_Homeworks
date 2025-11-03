@@ -19,8 +19,8 @@ public class Query {
             gameNames += games[k].getGameName();
             roundsCount += rounds[k];
             if (k < 2) {// boundary value is 2 because there are 3 games
-                gameNames+=", ";
-                roundsCount+=", ";
+                gameNames += ", ";
+                roundsCount += ", ";
             }
         }
 
@@ -35,30 +35,30 @@ public class Query {
         System.out.println("Bonus Points: " + match.getBonusPoints());
         System.out.println("Match Points: " + match.getMatchPoints());
     }
+
     // Find match by highest or lowest points
     private Match findMatchByPoint(boolean findMax) {
-    Match[][] allMatches = matchManager.getAllMatches();
-    Match targetMatch = null;
-    Integer targetPoints = null;
+        Match[][] allMatches = matchManager.getAllMatches();
+        Match targetMatch = null;
+        Integer targetPoints = null;
 
-    for (Match[] gamerMatches : allMatches) {
-        for (Match match : gamerMatches) {
-            int points = match.getMatchPoints();
+        for (Match[] gamerMatches : allMatches) {
+            for (Match match : gamerMatches) {
+                int points = match.getMatchPoints();
 
-            if (targetPoints == null) { // Take the first match as initial target
-                targetPoints = points;
-                targetMatch = match;
-            } else if ((findMax && points > targetPoints) || (!findMax && points < targetPoints)) {
-                // Update target if current match has higher/lower points
-                targetPoints = points;
-                targetMatch = match;
+                if (targetPoints == null) { // Take the first match as initial target
+                    targetPoints = points;
+                    targetMatch = match;
+                } else if ((findMax && points > targetPoints) || (!findMax && points < targetPoints)) {
+                    // Update target if current match has higher/lower points
+                    targetPoints = points;
+                    targetMatch = match;
+                }
             }
         }
+
+        return targetMatch;
     }
-
-    return targetMatch;
-}
-
 
     public void runQuery1_HighestScoringMatch() {
         System.out.println("1. Highest-Scoring Match");
@@ -75,14 +75,15 @@ public class Query {
         Match lowestMatch = findMatchByPoint(false);
 
         System.out.println("Lowest-Scoring Match:");
-        if (lowestMatch == null) return;
+        if (lowestMatch == null)
+            return;
 
         printMatchDetails(lowestMatch);
 
         Game[] games = lowestMatch.getGames();
         int[] rounds = lowestMatch.getRounds();
         rounds = lowestMatch.getRounds();
-        
+
         Game mostContributingGame = null;
         int maxContribution = -1;
         int contributingGameIndex = -1;
@@ -99,10 +100,11 @@ public class Query {
         System.out.println("Most Contributing Game in this Match:");
         if (mostContributingGame != null) {
             System.out.println("Game: " + mostContributingGame.getGameName());
-            System.out.println("Contribution: " + rounds[contributingGameIndex] + " rounds × " + mostContributingGame.getBasePoint() + " points = " + maxContribution);
+            System.out.println("Contribution: " + rounds[contributingGameIndex] + " rounds × "
+                    + mostContributingGame.getBasePoint() + " points = " + maxContribution);
         }
     }
-    
+
     public void runQuery3_LowestBonusMatch() {
         System.out.println("3. Match with the Lowest Bonus Points");
         Match lowestBonusMatch = findMatchByBonus(Integer.MAX_VALUE);
@@ -114,7 +116,8 @@ public class Query {
             StringBuilder gameNames = new StringBuilder("[");
             for (int k = 0; k < 3; k++) {
                 gameNames.append(games[k].getGameName());
-                if (k < 2) gameNames.append(", ");
+                if (k < 2)
+                    gameNames.append(", ");
             }
             gameNames.append("]");
             System.out.println("Games: " + gameNames.toString());
@@ -172,6 +175,7 @@ public class Query {
         }
         return highestGamer;
     }
+
     // Calculate total tournament points
     public void runQuery5_TotalTournamentPoints() {
         System.out.println("5. Total Tournament Points");
@@ -189,8 +193,7 @@ public class Query {
         System.out.println("Total Tournament Points across " + totalMatches + " matches: " + totalTournamentPoints);
     }
 
-
-    //Print medal distribution
+    // Print medal distribution
     public void runQuery6_MedalDistribution() {
         System.out.println("6. Medal Distribution");
         Gamer[] gamers = pointsBoard.getFinalStandings();
@@ -213,7 +216,7 @@ public class Query {
                 noneCount++;
             }
         }
-        
+
         double goldPercent = (double) goldCount / totalGamers * 100;
         double silverPercent = (double) silverCount / totalGamers * 100;
         double bronzePercent = (double) bronzeCount / totalGamers * 100;

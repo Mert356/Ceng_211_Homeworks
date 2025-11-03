@@ -7,8 +7,8 @@ public class FileIO {
     public static int getLineCount(String filePath) {
         int count = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            reader.readLine();
-            while (reader.readLine() != null) {
+            reader.readLine(); // Skip the header line
+            while (reader.readLine() != null) { // Read the rest of the lines
                 count++;
             }
         } catch (IOException e) {
@@ -32,7 +32,7 @@ public class FileIO {
                 int basePoint = Integer.parseInt(parts[2].trim());
                 games[index++] = new Game(id, name, basePoint);
             }
-        } catch (IOException | NumberFormatException e) {
+        } catch (IOException e) {
             System.err.println(e.getMessage());
         }
         return games;
@@ -56,7 +56,7 @@ public class FileIO {
                 int experienceYears = Integer.parseInt(parts[4].trim());
                 gamers[index++] = new Gamer(id, nickname, name, phone, experienceYears);
             }
-        } catch (IOException | NumberFormatException e) {
+        } catch (IOException e) {
             System.err.println(e.getMessage());
         }
         return gamers;

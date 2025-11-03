@@ -16,7 +16,7 @@ public class Gamer {
         this.experienceYears = experienceYears;
         this.totalPoints = 0;
         this.averagePerMatch = 0.0;
-        this.medal = "None";
+        this.medal = "Not Initilized";
     }
 
     // Getters
@@ -43,7 +43,7 @@ public class Gamer {
     }   
 
     public int getNeededExperienceYear() {
-         return Math.min(this.experienceYears, 10);
+        return Math.min(this.experienceYears, 10);
     }
     
     @Override

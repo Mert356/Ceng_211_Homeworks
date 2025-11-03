@@ -48,11 +48,13 @@ public class Match {
     }
 
     private void calculateSkillPoints() {
+        // Skill multiplier based on experience years which comes from gamer class by getNeededExperienceYear method
         int effectiveExp = gamer.getNeededExperienceYear();
         double skillMultiplier = 1.0 + effectiveExp * 0.02;
         this.skillPoints = (int) Math.floor(this.rawPoints * skillMultiplier);
     }
 
+    // Bonus point calculation
     private void calculateBonusPoints() {
         if (rawPoints >= 600) {
             this.bonusPoints = 100;
@@ -65,6 +67,7 @@ public class Match {
         }
     }
 
+    // Getters
     public int getId() {
         return id;
     }

@@ -9,7 +9,7 @@ public class MatchManagement {
         this.allGamers = allGamers;
         this.allGames = allGames;
         this.MATCHES_PER_GAMER = matchesPerGamer;
-            this.allMatches = new Match[allGamers.length][matchesPerGamer];
+        this.allMatches = new Match[allGamers.length][matchesPerGamer];
     }
     
     public void simulateMatches() {

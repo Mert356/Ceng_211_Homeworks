@@ -14,10 +14,6 @@ public class EsportsManagementApp {
             return;
         }
 
-        int totalExpectedMatches = allGamers.length * MATCHES_PER_GAMER;
-        System.out.println("Gamer Count" + allGamers.length);
-        System.out.println("Total Match: " + totalExpectedMatches);
-
         MatchManagement matchManager = new MatchManagement(allGamers, allGames, MATCHES_PER_GAMER);
         matchManager.simulateMatches();
         
