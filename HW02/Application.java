@@ -23,7 +23,7 @@ public class Application {
         this.applicationId = applicationId;
     }
 
-    // Public Getters (for App.java/FileIO.java and final output)
+    // Public Getters
     public String getApplicationId() { return applicationId; }
     public String getName() { return name; }
     public double getGpa() { return gpa; }
@@ -32,8 +32,6 @@ public class Application {
     public String getScholarshipType() { return scholarshipType; }
     public String getDuration() { return duration; }
     public String getRejectionReason() { return rejectionReason; }
-    
-    // Protected Accessors (for subclasses' evaluation logic)
     public boolean isHasEnrollmentCertificate() { return hasEnrollmentCertificate; }
     public boolean isHasRecommendationLetter() { return hasRecommendationLetter; }
     public boolean isHasSavingsDocument() { return hasSavingsDocument; }
@@ -42,20 +40,16 @@ public class Application {
     public double getIncome() { return income; }
     public String getTranscriptStatus() { return transcriptStatus; }
     
-    // Public Setters (for FileIO.java to populate data)
+    // Public Setters (for FileIO.java)
     public void setName(String name) { this.name = name; }
     public void setGpa(double gpa) { this.gpa = gpa; }
     public void setIncome(double income) { this.income = income; }
     public void setTranscriptStatus(String transcriptStatus) { this.transcriptStatus = transcriptStatus; }
-    
-    // Protected Setters (for internal/subclass use)
     public void setStatus(String status) { this.status = status; }
     public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
     public void setScholarshipType(String scholarshipType) { this.scholarshipType = scholarshipType; }
     public void setDuration(String duration) { this.duration = duration; }
     public void setScholarshipName(String scholarshipName) { this.scholarshipName = scholarshipName; }
-
-    // Public Document Setters (for FileIO.java)
     public void setHasEnrollmentCertificate(boolean hasEnrollmentCertificate) { this.hasEnrollmentCertificate = hasEnrollmentCertificate; }
     public void setHasRecommendationLetter(boolean hasRecommendationLetter) { this.hasRecommendationLetter = hasRecommendationLetter; }
     public void setHasSavingsDocument(boolean hasSavingsDocument) { this.hasSavingsDocument = hasSavingsDocument; }
