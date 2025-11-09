@@ -34,13 +34,13 @@ public class Application {
     public String getRejectionReason() { return rejectionReason; }
     
     // Protected Accessors (for subclasses' evaluation logic)
-    protected boolean isHasEnrollmentCertificate() { return hasEnrollmentCertificate; }
-    protected boolean isHasRecommendationLetter() { return hasRecommendationLetter; }
-    protected boolean isHasSavingsDocument() { return hasSavingsDocument; }
-    protected boolean isHasSupervisorApproval() { return hasSupervisorApproval; }
-    protected boolean isHasGrantProposal() { return hasGrantProposal; }
-    protected double getIncome() { return income; }
-    protected String getTranscriptStatus() { return transcriptStatus; }
+    public boolean isHasEnrollmentCertificate() { return hasEnrollmentCertificate; }
+    public boolean isHasRecommendationLetter() { return hasRecommendationLetter; }
+    public boolean isHasSavingsDocument() { return hasSavingsDocument; }
+    public boolean isHasSupervisorApproval() { return hasSupervisorApproval; }
+    public boolean isHasGrantProposal() { return hasGrantProposal; }
+    public double getIncome() { return income; }
+    public String getTranscriptStatus() { return transcriptStatus; }
     
     // Public Setters (for FileIO.java to populate data)
     public void setName(String name) { this.name = name; }
@@ -49,11 +49,11 @@ public class Application {
     public void setTranscriptStatus(String transcriptStatus) { this.transcriptStatus = transcriptStatus; }
     
     // Protected Setters (for internal/subclass use)
-    protected void setStatus(String status) { this.status = status; }
-    protected void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
-    protected void setScholarshipType(String scholarshipType) { this.scholarshipType = scholarshipType; }
-    protected void setDuration(String duration) { this.duration = duration; }
-    protected void setScholarshipName(String scholarshipName) { this.scholarshipName = scholarshipName; }
+    public void setStatus(String status) { this.status = status; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+    public void setScholarshipType(String scholarshipType) { this.scholarshipType = scholarshipType; }
+    public void setDuration(String duration) { this.duration = duration; }
+    public void setScholarshipName(String scholarshipName) { this.scholarshipName = scholarshipName; }
 
     // Public Document Setters (for FileIO.java)
     public void setHasEnrollmentCertificate(boolean hasEnrollmentCertificate) { this.hasEnrollmentCertificate = hasEnrollmentCertificate; }
