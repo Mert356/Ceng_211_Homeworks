@@ -12,6 +12,7 @@ public class ResearchApplication extends Application {
     public void addPublication(Publication publication) {
         this.publications.add(publication);
     }
+    
     protected ArrayList<Publication> getPublications() { return publications; }
     
     @Override
@@ -32,7 +33,7 @@ public class ResearchApplication extends Application {
             for (Publication p : getPublications()) {
                 totalImpactFactor += p.getImpactFactor();
             }
-            avgImpactFactor = totalImpactFactor / getPublications().size();
+            avgImpactFactor = totalImpactFactor / publications.size();
         } 
         
         if (avgImpactFactor >= 1.50) {
@@ -45,27 +46,19 @@ public class ResearchApplication extends Application {
             return;
         }
         
-        setStatus("Accepted");
-
-        int baseDurationInMonths;
-        if (getScholarshipType().equals("Full")) {
-            baseDurationInMonths = 12; 
-        } else { 
-            baseDurationInMonths = 6;  
-        }
+        int baseDurationInMonths = getScholarshipType().equals("Full") ? 12 : 6;
         
         if (isHasSupervisorApproval()) {
             baseDurationInMonths += 12;
         }
         
-        if (baseDurationInMonths == 12) {
-            setDuration("1 year");
-        } else if (baseDurationInMonths == 24) {
-            setDuration("2 years");
-        } else if (baseDurationInMonths % 12 == 0) {
-            setDuration((baseDurationInMonths / 12) + " years");
+        if (baseDurationInMonths % 12 == 0) {
+            int years = baseDurationInMonths / 12;
+            setDuration(years + (years > 1 ? " years" : " year"));
         } else {
             setDuration(baseDurationInMonths + " months");
         }
+
+        setStatus("Accepted");
     }
 }

@@ -8,7 +8,7 @@ public class MeritApplication extends Application {
     @Override
     public void evaluate() {
         if (!checkGeneralEligibility()) {
-            return; 
+            return;
         }
 
         if (getGpa() >= 3.20) {

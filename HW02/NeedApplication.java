@@ -10,20 +10,20 @@ public class NeedApplication extends Application {
 
     public void setFamilyIncome(double familyIncome) { this.familyIncome = familyIncome; }
     public void setDependents(int dependents) { this.dependents = dependents; }
+    
     protected double getFamilyIncome() { return familyIncome; }
     protected int getDependents() { return dependents; }
-    
+
     @Override
     public void evaluate() {
         if (!checkGeneralEligibility()) {
             return; 
         }
         
-        double finalIncome = getFamilyIncome() > -1.0 ? getFamilyIncome() : getIncome();
+        double finalIncome = (getFamilyIncome() > -1.0) ? getFamilyIncome() : getIncome();
         
         double fullThreshold = 10000.0;
         double halfThreshold = 15000.0;
-        
         double increaseFactor = 1.0;
         
         if (isHasSavingsDocument()) {
@@ -38,10 +38,8 @@ public class NeedApplication extends Application {
 
         if (finalIncome <= fullThreshold) {
             setScholarshipType("Full");
-            setStatus("Accepted");
         } else if (finalIncome > fullThreshold && finalIncome <= halfThreshold) {
             setScholarshipType("Half");
-            setStatus("Accepted");
         } else {
             setStatus("Rejected");
             setRejectionReason("Financial status unstable");
@@ -49,5 +47,6 @@ public class NeedApplication extends Application {
         }
 
         setDuration("1 year");
+        setStatus("Accepted");
     }
 }

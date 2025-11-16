@@ -2,14 +2,21 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FileIO {
-    
+
+    private Application findApplicationById(List<Application> applications, String id) {
+        for (Application app : applications) {
+            if (app.getApplicationId().equals(id)) {
+                return app;
+            }
+        }
+        return null;
+    }
+
     public List<Application> readAndProcessCSV(String filePath) {
-        Map<String, Application> tempApplicationsMap = new HashMap<>(); 
+        List<Application> applications = new ArrayList<>();
         
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -23,7 +30,8 @@ public class FileIO {
                 String prefix = data[0].trim();
                 String applicantID = data[1].trim();
 
-                Application app = tempApplicationsMap.get(applicantID);
+                Application app = findApplicationById(applications, applicantID);
+                
                 if (app == null) {
                     if (applicantID.startsWith("11")) {
                         app = new MeritApplication(applicantID);
@@ -34,7 +42,8 @@ public class FileIO {
                     } else {
                         continue;
                     }
-                    tempApplicationsMap.put(applicantID, app);
+
+                    applications.add(app);
                 }
 
                 try {
@@ -49,9 +58,8 @@ public class FileIO {
                             break;
                         case "I": 
                             if (app instanceof NeedApplication) {
-                                NeedApplication needApp = (NeedApplication) app;
-                                needApp.setFamilyIncome(Double.parseDouble(data[2].trim()));
-                                needApp.setDependents(Integer.parseInt(data[3].trim()));
+                                ((NeedApplication) app).setFamilyIncome(Double.parseDouble(data[2].trim()));
+                                ((NeedApplication) app).setDependents(Integer.parseInt(data[3].trim()));
                             }
                             break;
                         case "D": 
@@ -64,22 +72,21 @@ public class FileIO {
                             break;
                         case "P": 
                             if (app instanceof ResearchApplication) {
-                                ResearchApplication researchApp = (ResearchApplication) app;
                                 String title = data[2].trim();
                                 double impactFactor = Double.parseDouble(data[3].trim());
-                                researchApp.addPublication(new Publication(title, impactFactor));
+                                ((ResearchApplication) app).addPublication(new Publication(title, impactFactor));
                             }
                             break;
                     }
                 } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-                    System.err.println("Error processing data line for ID " + applicantID + ": " + line);
+                    System.err.println("Hatalı veri satırı (ID: " + applicantID + "): " + line);
                 }
             }
         } catch (IOException e) {
-            System.err.println("ERROR: Could not read or find file: " + filePath);
+            System.err.println("HATA: Dosya okunamadı veya bulunamadı: " + filePath);
             e.printStackTrace();
         }
         
-        return new ArrayList<>(tempApplicationsMap.values());
+        return applications;
     }
 }
