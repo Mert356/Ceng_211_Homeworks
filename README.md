@@ -1,7 +1,6 @@
 # CENG 211 - Programming Fundamentals
 
 This repository contains homework assignments for the **CENG 211** course.  
-Each homework folder is named according to the format **HW01**, **HW02**, and so on.
 
 ---
 
@@ -54,6 +53,32 @@ Ceng_211_Homeworks/
 │       ├── RoyalPenguin.java
 │       ├── SeaLion.java
 │       └── SlidingPuzzleApp.java
+├── HW04/
+│   ├── Files/
+│   │   └── CENG211_Fall2025_HW4.pdf
+│   └── src/
+│       └── main/
+│           ├── boxes/
+│           │   ├── Box.java
+│           │   ├── FixedBox.java
+│           │   ├── RegularBox.java
+│           │   └── UnchangingBox.java
+│           ├── core/
+│           │   ├── BoxGrid.java
+│           │   └── BoxPuzzle.java
+│           ├── exceptions/
+│           │   ├── BoxAlreadyFixedException.java
+│           │   ├── EmptyBoxException.java
+│           │   └── UnmovableFixedBoxException.java
+│           ├── tools/
+│           │   ├── BoxFixer.java
+│           │   ├── BoxFlipper.java
+│           │   ├── MassColumnStamp.java
+│           │   ├── MassRowStamp.java
+│           │   ├── PlusShapeStamp.java
+│           │   └── SpecialTool.java
+│           ├── BoxPuzzleApp.java
+│           └── Direction.java
 </pre>
 
 ---
@@ -102,5 +127,20 @@ Topics Covered:
 - **Enumerations** for types and directions
 - **Lists and ArrayLists** for managing dynamic game objects
 
+---
+
+## HW04 – Box Top Side Matching Puzzle App
+In this homework, a **Box Top Side Matching Puzzle** game is implemented in Java.  
+The application simulates an 8x8 grid containing different types of boxes (Regular, Fixed, Unchanging). The player's goal is to maximize the occurrences of a specific "target letter" on the top sides of the boxes within 5 turns.  
+The game involves complex mechanics such as rolling boxes with a **domino effect**, opening boxes to find special tools, and using these tools to manipulate the grid.
+
+This assignment focuses on advanced Java features, particularly **Generics**, **Exception Handling**, and **Inner Classes**, while reinforcing polymorphism through a tool-usage system.
+
+Topics Covered:
+- **Generics** and **Generic Methods** for type-safe tool handling  
+- **Custom Exception Handling** (`UnmovableFixedBoxException`, etc.) to manage game rules  
+- **Abstract Classes** and **Polymorphism** (Box and SpecialTool hierarchies)  
+- **Inner Classes** for encapsulating menu and UI logic  
+- **Complex Game Logic** (Recursive-like propagation for box rolling)
 ---
 More assignments will be added as the semester continues.
