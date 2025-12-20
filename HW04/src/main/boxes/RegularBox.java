@@ -6,6 +6,8 @@ public class RegularBox extends Box {
         super();
     }
     
+
+    //for getting help while creating the grid
     @Override
     public String getTypeString() {
         return "R";

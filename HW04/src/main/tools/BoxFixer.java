@@ -5,18 +5,18 @@ import src.main.boxes.FixedBox;
 import src.main.core.BoxGrid;
 import src.main.exceptions.BoxAlreadyFixedException;
 
-public class BoxFixer extends SpecialTool{
+public class BoxFixer extends SpecialTool {
 
     @Override
-    public void useTool(BoxGrid grid, int row, int col,char targetLetter) throws BoxAlreadyFixedException {
+    public String useTool(BoxGrid grid, int row, int col, char targetLetter) throws BoxAlreadyFixedException {
         Box box = grid.getBox(row, col);
-        if(box instanceof FixedBox){
+        if (box instanceof FixedBox) {
             throw new BoxAlreadyFixedException();
         }
 
-        FixedBox fBox = new FixedBox();
-        fBox.setTopSide(box.getTopSide());
+        FixedBox fBox = new FixedBox(box);
         grid.setBox(row, col, fBox);
+
+        return "The box on location R" + (row + 1) + "-C" + (col + 1) + " has been replaced with a FixedBox.";
     }
-    
 }

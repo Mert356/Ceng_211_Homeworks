@@ -27,54 +27,78 @@ public class BoxPuzzle {
     }
 
     public void play() {
-        System.out.println("Welcome to Box Top Side Matching Puzzle App.");
-        System.out.println("An 8x8 box grid is being generated.");
-        System.out.println("Your goal is to maximize the letter \"" + targetLetter + "\" on the top sides.");
+        System.out.println("Welcome to Box Top Side Matching Puzzle App. An 8x8 box grid is being generated.");
+        System.out.println("Your goal is to maximize the letter \"" + targetLetter + "\" on the top sides of the boxes.");
+        System.out.println("The initial state of the box grid:\n");
 
         for (int turn = 1; turn <= MAX_TURNS; turn++) {
-            System.out.println("\n" + boxGrid.toString()); // Gridi yazdır
+            System.out.println("\n" + boxGrid.toString());
             System.out.println("=====> TURN " + turn + ":");
 
             menu.handleViewBoxSurfaces();
 
-            System.out.println("---> TURN " + turn + " FIRST STAGE:");
+            System.out.println("---> TURN " + turn + " - FIRST STAGE:");
             boolean moveSuccessful = handleRollingStage();
 
             if (!moveSuccessful) {
-                System.out.println("Turn wasted due to fixed box blocking or error!");
-                continue; // Tur yandı, sonraki tura geç
+                continue;
             }
 
             System.out.println("The new state of the box grid:\n" + boxGrid.toString());
 
-            System.out.println("---> TURN " + turn + " SECOND STAGE:");
+            System.out.println("---> TURN " + turn + " - SECOND STAGE:");
             handleOpeningStage();
-            // Bu aşamada hata olsa bile (EmptyBox) tur bitmiş sayılır ve döngü devam eder.
         }
 
         endGame();
     }
 
     private boolean handleRollingStage() {
+        String currentMessage = "Please enter the location of the edge box you want to roll:";
+
         while (true) {
-            int[] pos = menu.getCoordinateInput("Please enter the location of the edge box you want to roll:");
+            int[] pos = menu.getCoordinateInput(currentMessage);
             int row = pos[0];
             int col = pos[1];
 
-            // Kenar kontrolü
             if (!isEdgeBox(row, col)) {
-                System.out.println("INCORRECT INPUT: The chosen box is not on any of the edges.");
+                currentMessage = "INCORRECT INPUT: The chosen box is not on any of the edges. Please reenter the location:";
                 continue;
             }
 
-            Direction dir = determineRollDirection(row, col);
+            Direction dir;
+            String directionText = "";
+
+            if (isCorner(row, col)) {
+                dir = menu.askDirectionForCorner(row, col);
+
+                switch (dir) {
+                    case UP:    directionText = "upwards"; break;
+                    case DOWN:  directionText = "downwards"; break;
+                    case LEFT:  directionText = "to left"; break;
+                    case RIGHT: directionText = "to the right"; break;
+                }
+
+                System.out.println("The chosen box and any box on its path have been rolled " + directionText + ".");
+                
+            } else {
+                dir = determineRollDirection(row, col);
+
+                switch (dir) {
+                    case UP:    directionText = "upwards"; break;
+                    case DOWN:  directionText = "downwards"; break;
+                    case LEFT:  directionText = "to left"; break;
+                    case RIGHT: directionText = "to the right"; break;
+                }
+
+                System.out.println("The chosen box is automatically rolled " + directionText + ".");
+            }
 
             try {
-                // BoxGrid'e henüz eklemediysen rollGrid metodunu yazman gerekecek!
                 boxGrid.rollGrid(row, col, dir);
                 return true;
             } catch (UnmovableFixedBoxException e) {
-                System.out.println("EXCEPTION: " + e.getMessage());
+                System.out.println("HOWEVER, IT IS FIXED BOX AND CANNOT BE MOVED. Continuing to the next turn... [cite: 53]");
                 return false;
             } catch (Exception e) {
                 System.out.println("An unexpected error occurred: " + e.getMessage());
@@ -83,43 +107,52 @@ public class BoxPuzzle {
         }
     }
 
+    // Check if the box is at a corner
+    private boolean isCorner(int r, int c) {
+        return (r == 0 || r == 7) && (c == 0 || c == 7);
+    }
+
     private void handleOpeningStage() {
+        String currentMessage = "Please enter the location of the box you want to open:";
+
         while (true) {
-            int[] pos = menu.getCoordinateInput("Please enter the location of the box you want to open:");
+            int[] pos = menu.getCoordinateInput(currentMessage);
             int row = pos[0];
             int col = pos[1];
 
-            // Not: Ödevde "seçilen kutu hareket etmiş olmalı" kuralı var.
-            // Bu kontrol BoxGrid tarafında yapılabilir veya burada basitçe geçilebilir.
-            // Şimdilik doğrudan açmayı deniyoruz.
+            // Check if the box was moved in the rolling stage
+            if (!boxGrid.hasBoxMoved(row, col)) {
+                currentMessage = "INCORRECT INPUT: The chosen box was not rolled during the first stage. Please reenter the location:";
+                continue;
+            }
 
             Box selectedBox = boxGrid.getBox(row, col);
             try {
                 SpecialTool tool = selectedBox.open();
-
                 useAcquiredTool(tool);
-                break; // Başarılı işlem sonrası döngüden çık
-
+                break; 
             } catch (EmptyBoxException e) {
-                System.out.println("BOX IS EMPTY! Continuing to the next turn... [cite: 74]");
-                break; // Tur yanar, döngüden çık
+                System.out.println("BOX IS EMPTY! Continuing to the next turn...");
+                break; 
             }
         }
     }
 
     /**
-     * [cite_start]ÖDEVDE İSTENEN GENERIC METHOD [cite: 77]
-     * Bulunan tool ne olursa olsun burada işlenir.
+     * The acquired tool is processed here regardless of its type.
+     * Using generics to handle different SpecialTool types.
      */
+
     private <T extends SpecialTool> void useAcquiredTool(T tool) {
         System.out.println("It contains a SpecialTool --> " + tool.toString());
 
         while (true) {
             int[] targetPos = menu.getCoordinateInput("Please enter the location of the box to use this SpecialTool:");
             try {
-                // Generic tool kullanımı
-                tool.useTool(boxGrid, targetPos[0], targetPos[1], targetLetter);
-                System.out.println("Tool used successfully!");
+                String successMessage = tool.useTool(boxGrid, targetPos[0], targetPos[1], targetLetter);
+                
+                System.out.println(successMessage);
+                
                 break;
             } catch (BoxAlreadyFixedException | UnmovableFixedBoxException e) {
                 System.out.println("This move is invalid: " + e.getMessage());
@@ -140,12 +173,11 @@ public class BoxPuzzle {
         boolean isCorner = (r == 0 || r == 7) && (c == 0 || c == 7);
 
         if (isCorner) {
-            // Basitlik adına köşelerde sabit yön veya kullanıcı seçimi sunulabilir.
-            // Ödevde kullanıcı seçimi isteniyor:
+            
             return menu.askDirectionForCorner(r, c);
         }
 
-        // Kenarlara göre otomatik yön
+        // apply direction based on edge
         if (r == 0)
             return Direction.DOWN;
         if (r == 7)
@@ -155,13 +187,13 @@ public class BoxPuzzle {
         if (c == 7)
             return Direction.LEFT;
 
-        return Direction.RIGHT; // Varsayılan (Asla buraya düşmemeli)
+        return Direction.RIGHT; // Default, should not reach here
     }
 
     private void endGame() {
         System.out.println("\nGAME OVER");
         System.out.println(boxGrid.toString());
-        int score = boxGrid.calculateScore(targetLetter); // BoxGrid'e bu metodu eklemelisin
+        int score = boxGrid.calculateScore(targetLetter);
         System.out.println("THE TOTAL NUMBER OF TARGET LETTER \"" + targetLetter + "\" --> " + score);
         System.out.println("The game has been SUCCESSFULLY completed!");
     }
@@ -169,9 +201,10 @@ public class BoxPuzzle {
     private class PuzzleMenu {
 
         public int[] getCoordinateInput(String message) {
+
             while (true) {
                 System.out.print(message + " ");
-                String input = scanner.next(); // Örn: R1-C1 veya 1-1
+                String input = scanner.next();
 
                 try {
                     input = input.toUpperCase().replace("R", "").replace("C", "");
@@ -180,7 +213,7 @@ public class BoxPuzzle {
                     if (parts.length != 2)
                         throw new Exception();
 
-                    int row = Integer.parseInt(parts[0]) - 1; // 1-based to 0-based
+                    int row = Integer.parseInt(parts[0]) - 1;
                     int col = Integer.parseInt(parts[1]) - 1;
 
                     if (row >= 0 && row < 8 && col >= 0 && col < 8) {
@@ -206,49 +239,70 @@ public class BoxPuzzle {
         }
 
         public Direction askDirectionForCorner(int r, int c) {
-            System.out.println("The chosen box is in a corner.");
-            // Köşeye göre mantıklı yönleri sunabiliriz ama basitçe soruyoruz:
-            System.out.println("Select direction: [1] Vertical (Up/Down) [2] Horizontal (Left/Right)");
-            String choice = scanner.next();
+            Direction dir1 = null;
+            Direction dir2 = null;
+            String name1 = "";
+            String name2 = "";
 
-            if (choice.equals("1")) {
-                return (r == 0) ? Direction.DOWN : Direction.UP;
-            } else {
-                return (c == 0) ? Direction.RIGHT : Direction.LEFT;
+            // Set options according to corner position
+            if (r == 0 && c == 0) {
+                dir1 = Direction.RIGHT;
+                name1 = "right";
+                dir2 = Direction.DOWN;
+                name2 = "downwards";
             }
+            else if (r == 0 && c == 7) {
+                dir1 = Direction.LEFT;
+                name1 = "left";
+                dir2 = Direction.DOWN;
+                name2 = "downwards";
+            }
+            else if (r == 7 && c == 0) {
+                dir1 = Direction.RIGHT;
+                name1 = "right";
+                dir2 = Direction.UP;
+                name2 = "upwards";
+            }
+            else if (r == 7 && c == 7) {
+                dir1 = Direction.LEFT;
+                name1 = "left";
+                dir2 = Direction.UP;
+                name2 = "upwards";
+            }
+
+            System.out.print("The chosen box can be rolled to either [1] " + name1 + " or [2] " + name2 + ": ");
+
+            String choice = scanner.next();
+            while (!choice.equals("1") && !choice.equals("2")) {
+                System.out.print("Invalid input! Please enter 1 or 2: ");
+                choice = scanner.next();
+            }
+            return choice.equals("1") ? dir1 : dir2;
         }
 
-        // BoxPuzzle.java -> PuzzleMenu class'ı içinde:
+        private void printBoxSurfaces(Box box) {
+            if (box == null)
+                System.out.println("Box is null!");
 
-        // BoxPuzzle.java -> PuzzleMenu class içinde
+            String indent = "      ";
+            String singleLine = "-------";
+            String tripleLine = "-------------------";
 
-private void printBoxSurfaces(Box box) {
-            if (box == null) return;
-
-            // Hizalama için Sabitler
-            String indent = "      "; // 7 boşluk (Sol tarafı ortalamak için)
-            String singleLine = "-------"; // Tekli kutu genişliği
-            String tripleLine = "-------------------"; // 3 kutu genişliği (Orta kısım için)
-
-            // 1. Back (Arka) - En Üst
+            // back
             System.out.println(indent + singleLine);
             System.out.println(indent + "|  " + box.getBackSide() + "  |");
 
-            // 2. Orta Kısım (Left - Top - Right)
-            // Çift çizgiyi önlemek için burayı tek parça halinde yazıyoruz
+            // Left, Top, Right - Middle part
             System.out.println(tripleLine);
-            System.out.println("|  " + box.getLeftSide() + "  |  " + box.getTopSide() + "  |  " + box.getRightSide() + "  |");
+            System.out.println(
+                    "|  " + box.getLeftSide() + "  |  " + box.getTopSide() + "  |  " + box.getRightSide() + "  |");
             System.out.println(tripleLine);
 
-            // 3. Front (Ön)
             System.out.println(indent + "|  " + box.getFrontSide() + "  |");
-            
-            // 4. Bottom (Alt)
-            // Front ile Bottom arasındaki çizgi
-            System.out.println(indent + singleLine); 
+
+            System.out.println(indent + singleLine);
             System.out.println(indent + "|  " + box.getBottomSide() + "  |");
-            
-            // Kapanış Çizgisi
+
             System.out.println(indent + singleLine);
         }
 

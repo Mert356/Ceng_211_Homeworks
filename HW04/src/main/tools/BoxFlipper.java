@@ -8,15 +8,16 @@ import src.main.exceptions.UnmovableFixedBoxException;
 public class BoxFlipper extends SpecialTool {
 
     @Override
-    public void useTool(BoxGrid grid, int row, int col, char targetLetter) throws UnmovableFixedBoxException {
+    public String useTool(BoxGrid grid, int row, int col, char targetLetter) throws UnmovableFixedBoxException {
 
         Box box = grid.getBox(row, col);
         if (box instanceof FixedBox) {
             throw new UnmovableFixedBoxException();
         }
-        char topSide = box.getTopSide();
-        box.setTopSide(box.getBottomSide());
-        box.setBottomSide(topSide);
+        box.flipVertically();
+
+        return "The chosen box on location R" + (row + 1) + "-C" + (col + 1) + 
+           " has been flipped upside down.";
     }
 
 }

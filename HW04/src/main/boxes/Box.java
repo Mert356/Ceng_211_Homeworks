@@ -15,27 +15,12 @@ public abstract class Box {
     private SpecialTool tool;
     private boolean isOpen;
 
-    public char getFrontSide() {
-        return front;
-    }
-
-    public char getBackSide() {
-        return back;
-    }
-
-    public char getLeftSide() {
-        return left;
-    }
-
-    public char getRightSide() {
-        return right;
-    }
-
     public Box() {
         isOpen = false;
         generateRandomSurfaces();
     }
 
+    // Rolling the box in the given direction
     public void roll(Direction dir) throws UnmovableFixedBoxException {
         char temptop = top;
         switch (dir) {
@@ -67,6 +52,19 @@ public abstract class Box {
             default:
                 break;
         }
+    }
+
+    // Helper for BoxFlipper tool
+    public void flipVertically() throws UnmovableFixedBoxException {
+        // Change bottom and top
+        char tempTop = top;
+        top = bottom;
+        bottom = tempTop;
+
+        // Change front and back
+        char tempFront = front;
+        front = back;
+        back = tempFront;
     }
 
     public SpecialTool open() throws EmptyBoxException {
@@ -105,33 +103,74 @@ public abstract class Box {
         this.left = surfaces.get(5);
     }
 
-    public char getTopSide() {
-        return top;
+    // GETTERS
+    public char getFrontSide() {
+        return front;
     }
 
-    public void setTopSide(char top) {
-        this.top = top;
+    public char getBackSide() {
+        return back;
+    }
+
+    public char getLeftSide() {
+        return left;
+    }
+
+    public char getRightSide() {
+        return right;
+    }
+
+    public char getTopSide() {
+        return top;
     }
 
     public char getBottomSide() {
         return this.bottom;
     }
 
-    public void setBottomSide(char bottom) {
+    public boolean isOpen() {
+        return this.isOpen;
+    }
+
+    public boolean hasTool() {
+        return this.tool != null;
+    }
+
+    // SETTERS
+
+    public void setTop(char top) {
+        this.top = top;
+    }
+
+    public void setBottom(char bottom) {
         this.bottom = bottom;
     }
 
-    public boolean isOpen() {
-        return this.isOpen;
+    public void setFront(char front) {
+        this.front = front;
+    }
+
+    public void setBack(char back) {
+        this.back = back;
+    }
+
+    public void setLeft(char left) {
+        this.left = left;
+    }
+
+    public void setRight(char right) {
+        this.right = right;
+    }
+
+    public void setOpen(boolean isOpen) {
+        this.isOpen = isOpen;
     }
 
     public void setTool(SpecialTool tool) {
         this.tool = tool;
     }
 
-    public boolean hasTool() {
-        return this.tool != null;
-    }
+    // for getting help while creating the grid
 
     public abstract String getTypeString();
 
@@ -141,7 +180,6 @@ public abstract class Box {
 
     @Override
     public String toString() {
-
         return " " + getTypeString() + "-" + getTopSide() + "-" + getStatusString() + " ";
     }
 }
