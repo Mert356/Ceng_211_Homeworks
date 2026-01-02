@@ -113,7 +113,7 @@ Topics Covered:
 
 ---
 
-## HW03 – Sliding Penguins Puzzle Game App
+## HW03 – Sliding Penguins Puzzle Game App (BROKEN)
 In this homework, a **Sliding Penguins Puzzle Game** is implemented in Java using strict Object-Oriented principles.  
 The application simulates a 10x10 icy grid where penguins slide to collect food while avoiding hazards like ice blocks, holes, and sea lions.  
 Each penguin type (King, Emperor, Royal, Rockhopper) has unique movement abilities and competes to gather the highest weight of food within 4 turns.
